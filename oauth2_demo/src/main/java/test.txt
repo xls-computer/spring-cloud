@@ -16,3 +16,15 @@
     详见：
     https://blog.csdn.net/qq_43639296/article/details/112604949
     https://blog.csdn.net/qq_40555976/article/details/106642882
+
+
+密码模式测试：
+    1.直接获取令牌
+    使用Post方式
+    http://localhost:8080/oauth/token
+    body里加上：grant_type、client_id、client_secret、username、password
+    2.访问资源
+    携带token访问资源
+
+    详见：
+    https://blog.csdn.net/DDJ_TEST/article/details/114697427

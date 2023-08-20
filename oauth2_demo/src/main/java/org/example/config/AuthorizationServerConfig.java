@@ -2,10 +2,13 @@ package org.example.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
+import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 
 //认证服务器配置
 @Configuration
@@ -13,6 +16,23 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
     @Autowired
     PasswordEncoder passwordEncoder;
+
+    //使用密码模式需要
+    @Autowired
+    AuthenticationManager authenticationManager;
+    @Autowired
+    UserDetailsService userDetailsService;
+
+    /**
+     * 使用密码模式需要
+     * @param endpoints
+     * @throws Exception
+     */
+    @Override
+    public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+        endpoints.authenticationManager(authenticationManager)
+                .userDetailsService(userDetailsService);
+    }
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
@@ -29,7 +49,9 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 //配置申请权限范伟
                 .scopes("all")
                 //配置grant_type，表示授权类型
-                .authorizedGrantTypes("authorization_code");
+//                .authorizedGrantTypes("authorization_code");
+                //修改为密码模式
+                .authorizedGrantTypes("password");
 
 
 

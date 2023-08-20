@@ -18,6 +18,7 @@
 
     <modules>
         <module>cloud-secutity-auth8001</module>
+        <module>oauth2_demo</module>
     </modules>
 
     <!--子项目可以直接继承版本号-->

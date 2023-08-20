@@ -43,6 +43,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.formLogin()
                 // 当发现访问路径的是/login时【默认是/auth好像】，会去调用自定义的认证逻辑，去执行UserDetailServiceImpl方法
                 // 因此必须与login.html页面中的表单提交的位置一致，这样一点击登录就调用了security里边的逻辑了
+                //  /logout是security定义的退出登录
                 .loginProcessingUrl("/login")
                 //使用自定义的登录页面[static下边]，而不是spring-security自带的页面
                 .loginPage("/login.html")
@@ -91,6 +92,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .userDetailsService(userDetailsService)
                 //持久层对啊ing
                 .tokenRepository(getPersistentTokenRepository());
+
+        //退出登录
+        http.logout()
+                //默认的logoutUrl为/logout 【一般是不会去修改url的地址的的】
+                .logoutUrl("/user/logout")
+                //推出后跳转到登录页面
+                .logoutSuccessUrl("/login.html");
 
     }
 

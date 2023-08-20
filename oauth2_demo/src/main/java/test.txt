@@ -1,14 +1,17 @@
 授权码模式测试：
     1.获取授权码
+    【需要验证用户身份，返回code】
    使用Get方式
    http://localhost:8080/oauth/authorize?response_type=code&client_id=admin&redirect_uri=http://www.baidu.com&scope=all
    点击approve允许【用户授权】，会跳转到redirect_uri，在地址栏可以看到：code=a18YRU
     2.获取令牌（根据授权码）
+    【验证client身份，携带code】
     使用Post方式
     http://localhost:8080/oauth/token
-    body里加上：上边返回的code、grant_type、client_id、client_secret、username、password [client的，不是user的]、redirect_uri
+    body里加上：上边返回的code、grant_type、client_id、client_secret【client端的id和secret】、redirect_uri
     会返回token信息
     3.获取资源（根据令牌）
+    【放在Authorization下的Bearer Token】
     使用get
     http://localhost:8080/user/getCurrentUser
     访问受保护的资源并携带token，就能正常访问页面了。
@@ -22,7 +25,7 @@
     1.直接获取令牌
     使用Post方式
     http://localhost:8080/oauth/token
-    body里加上：grant_type、client_id、client_secret、username、password
+    body里加上：grant_type、client_id、client_secret【client的认证】、username、password【用户的认证】
     2.访问资源
     携带token访问资源
 

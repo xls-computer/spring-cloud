@@ -42,6 +42,13 @@ public class TestController {
         return "hello abc";
     }
 
+    @ResponseBody
+    @RequestMapping("/afterLoginNeedIpAddr")
+    public String afterLoginNeedIpAddr(){
+        System.out.println("need ip 127.0.0.1");
+        return "hello ip 127.0.0.1";
+    }
+
 
 
 

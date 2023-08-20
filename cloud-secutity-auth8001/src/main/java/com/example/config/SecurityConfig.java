@@ -1,7 +1,9 @@
 package com.example.config;
 
+import com.example.handler.MyAccessDeniedHandler;
 import com.example.handler.MyAuthenticationFailHandler;
 import com.example.handler.MyAuthenticationSuccessHandler;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -12,6 +14,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 //security配置类
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+    @Autowired
+    MyAccessDeniedHandler myAccessDeniedHandler;
+
 
     @Bean
     public PasswordEncoder passwordEncoder(){
@@ -54,6 +59,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated();
         //关闭
         http.csrf().disable();
+
+        //异常处理
+        http.exceptionHandling()
+                //403的异常处理
+                .accessDeniedHandler(myAccessDeniedHandler);
     }
 
 

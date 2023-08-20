@@ -20,6 +20,10 @@ public class MyAuthenticationSuccessHandler implements AuthenticationSuccessHand
     //还携带了authentication对象
     @Override
     public void onAuthenticationSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException, ServletException {
+        //远程的ip地址
+        String remoteHost = httpServletRequest.getRemoteHost();
+        System.out.println(remoteHost);
+
         //获取到User的信息
         User user = (User) authentication.getPrincipal();
         System.out.println("User info : ");

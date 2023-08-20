@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class TestController {
 
+    @ResponseBody
     @RequestMapping("/t1")
     public String t1(){
         System.out.println("t1");

@@ -22,14 +22,16 @@ public class MyAuthenticationSuccessHandler implements AuthenticationSuccessHand
     public void onAuthenticationSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException, ServletException {
         //远程的ip地址
         String remoteHost = httpServletRequest.getRemoteHost();
-        System.out.println(remoteHost);
+        System.out.println("remoteHost: "+remoteHost);
+
+        System.out.println("RequestURI: "+httpServletRequest.getRequestURI());
 
         //获取到User的信息
         User user = (User) authentication.getPrincipal();
         System.out.println("User info : ");
-        System.out.println(user.getUsername());
-        System.out.println(user.getPassword());
-        System.out.println(user.getAuthorities());
+        System.out.println("             name: "+user.getUsername());
+        System.out.println("             passw: "+user.getPassword());
+        System.out.println("             authority: "+user.getAuthorities());
         //使用重定向就能实现站外的跳转了
         httpServletResponse.sendRedirect(url);
     }

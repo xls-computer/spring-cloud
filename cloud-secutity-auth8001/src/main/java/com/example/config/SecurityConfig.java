@@ -49,14 +49,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 //前边是路径匹配，后边是权限控制
                 //放行登录页面，到了登录页面也要认证的话，就会循环访问登陆页面
                 .antMatchers("/login.html").permitAll()
+                //资源后边根的权限控制底层都是使用的access()表达式来进行的，因此这种写法和上边的一样
+//                .antMatchers("/login.html").access("permitAll()")
                 //配置访问某个路径所需要的权限[在/afterLogin方法上使用注解也可以]
 //                .antMatchers("/afterLoginNeedAuthority").hasAnyAuthority("admin")
                 //配置某个访问路径需要某角色才能访问【这个地方不加Role_前缀】
-                .antMatchers("/afterLoginNeedRole").hasRole("abc,XXX")
+                .antMatchers("/afterLoginNeedRole").hasRole("abc")
                 //配置某个访问路径要具有特定ip才能访问【这个时候就不能使用localhost进行访问了】
                 .antMatchers("/afterLoginNeedIpAddr").hasIpAddress("127.0.0.1")
+
                 //表示所有认证都要登录后才能访问
-                .anyRequest().authenticated();
+//                .anyRequest().authenticated();
+                //加入自定义的访问控制逻辑（不仅要登录还要具有该uri的权限才能访问）[表示使用myAccessServiceImpl.hasPermission进行判断]
+                .anyRequest().access("@myAccessServiceImpl.hasPermission(request,authentication)");
+
+
         //关闭
         http.csrf().disable();
 

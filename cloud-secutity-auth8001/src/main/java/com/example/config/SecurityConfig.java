@@ -8,14 +8,25 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+
+import javax.sql.DataSource;
 
 //security配置类
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     MyAccessDeniedHandler myAccessDeniedHandler;
+
+    @Autowired
+    UserDetailsService userDetailsService;
+
+    @Autowired
+    DataSource dataSource;
 
 
     @Bean
@@ -59,9 +70,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/afterLoginNeedIpAddr").hasIpAddress("127.0.0.1")
 
                 //表示所有认证都要登录后才能访问
-//                .anyRequest().authenticated();
+                .anyRequest().authenticated();
                 //加入自定义的访问控制逻辑（不仅要登录还要具有该uri的权限才能访问）[表示使用myAccessServiceImpl.hasPermission进行判断]
-                .anyRequest().access("@myAccessServiceImpl.hasPermission(request,authentication)");
+//                .anyRequest().access("@myAccessServiceImpl.hasPermission(request,authentication)");
 
 
         //关闭
@@ -71,8 +82,27 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.exceptionHandling()
                 //403的异常处理
                 .accessDeniedHandler(myAccessDeniedHandler);
+
+        //remember-me
+        http.rememberMe()
+                //失效时间60s，默认为2周
+                .tokenValiditySeconds(60)
+                //自定义登录逻辑
+                .userDetailsService(userDetailsService)
+                //持久层对啊ing
+                .tokenRepository(getPersistentTokenRepository());
+
     }
 
+    //持久层对象
+    @Bean
+    public PersistentTokenRepository getPersistentTokenRepository(){
+        JdbcTokenRepositoryImpl jdbcTokenRepository = new JdbcTokenRepositoryImpl();
+        jdbcTokenRepository.setDataSource(dataSource);
+        //自动建表，第一次启动的时候需要，第二次启动时注释掉
+//        jdbcTokenRepository.setCreateTableOnStartup(true);
+        return jdbcTokenRepository;
+    }
 
 
 }

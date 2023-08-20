@@ -28,6 +28,20 @@ public class TestController {
         return "Error";
     }
 
+    @ResponseBody
+    @RequestMapping("/afterLoginNeedAuthority")
+    public String afterLoginNeedAuthority(){
+        System.out.println("need admin authority");
+        return "hello admin";
+    }
+
+    @ResponseBody
+    @RequestMapping("/afterLoginNeedRole")
+    public String afterLoginNeedRole(){
+        System.out.println("need abc Role");
+        return "hello abc";
+    }
+
 
 
 

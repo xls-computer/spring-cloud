@@ -28,6 +28,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         return new User("admin", passwordEncoder.encode("123"),
                 //权限不能为null
-                AuthorityUtils.commaSeparatedStringToAuthorityList("admin,normal"));
+                //设置了多个权限，和角色abc（以ROLE_开头，这样才能区分角色和权限）
+                AuthorityUtils.commaSeparatedStringToAuthorityList("admin,normal,ROLE_abc"));
     }
 }

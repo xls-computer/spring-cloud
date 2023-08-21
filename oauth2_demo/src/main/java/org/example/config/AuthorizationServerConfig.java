@@ -1,6 +1,7 @@
 package org.example.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -9,6 +10,7 @@ import org.springframework.security.oauth2.config.annotation.configurers.ClientD
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
+import org.springframework.security.oauth2.provider.token.TokenStore;
 
 //认证服务器配置
 @Configuration
@@ -22,16 +24,23 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     AuthenticationManager authenticationManager;
     @Autowired
     UserDetailsService userDetailsService;
+    //使用redis存储token
+    @Autowired
+    @Qualifier("redisTokenStore")
+    TokenStore redisTokenStore;
 
     /**
      * 使用密码模式需要
+     *
      * @param endpoints
      * @throws Exception
      */
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
         endpoints.authenticationManager(authenticationManager)
-                .userDetailsService(userDetailsService);
+                .userDetailsService(userDetailsService)
+                //使用redis存储token
+                .tokenStore(redisTokenStore);
     }
 
     @Override
@@ -52,7 +61,6 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 //                .authorizedGrantTypes("authorization_code");
                 //修改为密码模式
                 .authorizedGrantTypes("password");
-
 
 
     }

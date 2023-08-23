@@ -31,3 +31,6 @@
 
     详见：
     https://blog.csdn.net/DDJ_TEST/article/details/114697427
+
+使用jwt方式测试：
+    和上边是一样的（只是jwt的access_token很长）。

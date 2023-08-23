@@ -24,4 +24,10 @@ public class JwtTokenStoreConfig {
         jwtAccessTokenConverter.setSigningKey("test_key");
         return jwtAccessTokenConverter;
     }
+
+    //注入jwt增强器（自定义声明）
+    @Bean
+    public JwtTokenEnhancer jwtTokenEnhancer(){
+        return new JwtTokenEnhancer();
+    }
 }

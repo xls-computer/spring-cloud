@@ -10,6 +10,7 @@ import org.springframework.security.oauth2.config.annotation.configurers.ClientD
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
+import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.token.TokenEnhancer;
 import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.TokenStore;
@@ -84,16 +85,28 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .withClient("admin")
                 //配置client-secret
                 .secret(passwordEncoder.encode("123456"))
-                //配置token有效期
+                //配置token的有效期
                 .accessTokenValiditySeconds(3600)
+                //配置refresh_token的有效期
+                .refreshTokenValiditySeconds(3600*24)
                 //配置redirect_uri，用于授权成功后跳转
-                .redirectUris("http://www.baidu.com")
-                //配置申请权限范伟
+//                .redirectUris("http://www.baidu.com")
+                //这里是测试单点登录,登录成功后让它跳回客户端
+                .redirectUris("http://localhost:8081/login")
+                //自动授权配置(不用在需要授权的时候,在认证服务器页面再点击允许授权)
+                .autoApprove(true)
+                //配置申请权限范围
                 .scopes("all")
                 //配置grant_type，表示授权类型
 //                .authorizedGrantTypes("authorization_code");
                 //修改为密码模式        ,refresh_token标识支持令牌刷新【可以加多个授权类型】
-                .authorizedGrantTypes("password", "refresh_token");
+                //要支持单点登录,必须要有authorization_code模式支持
+                .authorizedGrantTypes("password", "refresh_token", "authorization_code");
+    }
 
+    @Override
+    public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
+        //使用单点登录需要配置的功能
+        security.tokenKeyAccess("isAuthenticated()");
     }
 }

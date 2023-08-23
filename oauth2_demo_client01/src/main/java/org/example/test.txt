@@ -1,0 +1,5 @@
+测试:
+    localhost:8081/user/getCurrentUser
+    自动跳转到--> localhost:8080/login [进行认证,走的就是认证服务器的userDetailService逻辑]
+    ---> 返回到localhost:8081/user/login  [在认证服务器配置的跳转路径]
+    ---> localhost:8081/user/getCurrentUser [可以正常访问]

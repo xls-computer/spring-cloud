@@ -11,6 +11,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.A
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.provider.token.TokenStore;
+import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 
 //认证服务器配置
 @Configuration
@@ -24,10 +25,20 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     AuthenticationManager authenticationManager;
     @Autowired
     UserDetailsService userDetailsService;
+
+    //使用redis来存储token的方式会使用到如下的redis和pool依赖，使用jwt不会使用到
     //使用redis存储token
+//    @Autowired
+//    @Qualifier("redisTokenStore")
+//    TokenStore redisTokenStore;
+
+    //使用jwt存储token
     @Autowired
-    @Qualifier("redisTokenStore")
-    TokenStore redisTokenStore;
+    @Qualifier("jwtTokenStore")
+    TokenStore tokenStore;
+
+    @Autowired
+    JwtAccessTokenConverter jwtAccessTokenConverter;
 
     /**
      * 使用密码模式需要
@@ -39,8 +50,13 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
         endpoints.authenticationManager(authenticationManager)
                 .userDetailsService(userDetailsService)
+                //使用redis来存储token的方式会使用到如下的redis和pool依赖，使用jwt不会使用到
                 //使用redis存储token
-                .tokenStore(redisTokenStore);
+//                .tokenStore(redisTokenStore);
+                //使用jwt存储token
+                .tokenStore(tokenStore)
+                .accessTokenConverter(jwtAccessTokenConverter);
+
     }
 
     @Override

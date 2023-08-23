@@ -36,6 +36,13 @@
         </dependency>
 
 
+        <!--jjwt-->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>0.9.0</version>
+        </dependency>
+
 
         <!--使用redis来存储token的方式会使用到如下的redis和pool依赖，使用jwt不会使用到-->
         <!--redis依赖-->

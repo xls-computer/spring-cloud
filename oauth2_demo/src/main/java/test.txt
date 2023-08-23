@@ -34,3 +34,6 @@
 
 使用jwt方式测试：
     和上边是一样的（只是jwt的access_token很长）。
+
+刷新令牌使用
+    将grant_type改为refresh_token，并携带refresh_token {xxxxx}作为body

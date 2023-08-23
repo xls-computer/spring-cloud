@@ -92,9 +92,8 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .scopes("all")
                 //配置grant_type，表示授权类型
 //                .authorizedGrantTypes("authorization_code");
-                //修改为密码模式
-                .authorizedGrantTypes("password");
-
+                //修改为密码模式        ,refresh_token标识支持令牌刷新【可以加多个授权类型】
+                .authorizedGrantTypes("password", "refresh_token");
 
     }
 }
